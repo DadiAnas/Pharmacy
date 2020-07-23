@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mypharmacy/src/pharmacyPage.dart';
+import 'package:pharmaciemobile/src/drugPage.dart';
+import 'package:pharmaciemobile/src/pharmacyPage.dart';
 
 class DrugButton extends StatefulWidget {
   @override
@@ -20,8 +21,8 @@ class _DrugButtonState extends State<DrugButton>
       lowerBound: 0.0,
       upperBound: 0.1,
     )..addListener(() {
-        setState(() {});
-      });
+      setState(() {});
+    });
   }
 
   @override
@@ -56,7 +57,7 @@ class _DrugButtonState extends State<DrugButton>
     return InkWell(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => PharmacyPage()));
+              context, MaterialPageRoute(builder: (context) => DrugPage()));
         },
         child: Container(
           height: 100,

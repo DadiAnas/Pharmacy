@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mypharmacy/src/pharmacyPage.dart';
+import 'package:pharmaciemobile/src/pharmacyPage.dart';
 
 class PharmacyButton extends StatefulWidget {
   @override
@@ -20,8 +20,8 @@ class _PharmacyButtonState extends State<PharmacyButton>
       lowerBound: 0.0,
       upperBound: 0.1,
     )..addListener(() {
-        setState(() {});
-      });
+      setState(() {});
+    });
   }
 
   @override
@@ -54,41 +54,41 @@ class _PharmacyButtonState extends State<PharmacyButton>
 
   Widget get _animatedButtonUI {
     return InkWell(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => PharmacyPage()));
-        },
-        child: Container(
-          height: 100,
-          width: 250,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x80000000),
-                blurRadius: 40.0,
-                offset: Offset(0.0, 30.0),
-              ),
-            ],
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xffe46b10),
-                Color(0xffFFbc80),
-              ],
-            ),
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PharmacyPage()));
+      },
+      child: Container(
+      height: 100,
+      width: 250,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x80000000),
+            blurRadius: 40.0,
+            offset: Offset(0.0, 30.0),
           ),
-          child: Center(
-            child: Text(
-              'Pharmacy',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+        ],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xffe46b10),
+            Color(0xffFFbc80),
+          ],
+        ),
+      ),
+      child: Center(
+        child: Text(
+          'Pharmacy',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
-        ));
+        ),
+      ),
+    ));
   }
 }

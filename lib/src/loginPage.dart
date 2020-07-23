@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:mypharmacy/src/signup.dart';
+import 'package:pharmaciemobile/src/homePage.dart';
+import 'package:pharmaciemobile/src/pages/home.dart';
+import 'package:pharmaciemobile/src/signup.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mypharmacy/src/homePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 import 'Widget/bezierContainer.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
-
   final String title;
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String _email, _password;
+  final GlobalKey<FormState> _formKey=GlobalKey<FormState>();
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -26,10 +30,9 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.arrow_back_ios,
-                  color: Color(0xffe46b10) /*Colors.black*/),
+              child: Icon(Icons.arrow_back_ios, color: Color(0xffe46b10)/*Colors.black*/),
             ),
-            /* Text('Back',
+           /* Text('Back',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))*/
           ],
         ),
@@ -37,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  /*Widget _entryField(String title, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -60,36 +63,34 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-  Widget _submitButton() {
-    return InkWell(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(vertical: 15),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: Offset(2, 4),
-                    blurRadius: 5,
-                    spreadRadius: 2)
-              ],
-              gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-          child: Text(
-            'Login',
-            style: TextStyle(fontSize: 20, color: Colors.white),
-          ),
-        ));
-  }
+*/
+  /*Widget _submitButton() {
+    return RaisedButton(
+      onPressed: (){},
+      child:  Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+        child: Text(
+          'Login',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      ) ,
+    );
+  }*/
 
   Widget _divider() {
     return Container(
@@ -124,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _facebookButton() {
+  /*Widget _facebookButton() {
     return Container(
       height: 50,
       margin: EdgeInsets.symmetric(vertical: 20),
@@ -171,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
+*/
   Widget _createAccountLabel() {
     return InkWell(
       onTap: () {
@@ -229,18 +230,19 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _emailPasswordWidget() {
+  /*Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
         _entryField("Email"),
         _entryField("Password", isPassword: true),
       ],
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
         body: Container(
       height: height,
@@ -259,10 +261,102 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   SizedBox(height: height * .2),
                   _title(),
-                  SizedBox(height: 50),
-                  _emailPasswordWidget(),
-                  SizedBox(height: 20),
-                  _submitButton(),
+                  SizedBox(height: 30),
+                  //_emailPasswordWidget(),
+                  Form(
+                    key : _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Email',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                  validator : (input){
+                                    if(input.isEmpty){
+                                      return 'Please type an Email';
+                                    }
+                                  },
+                                  onSaved: (input) => _email = input,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      fillColor: Color(0xfff3f3f4),
+                                      filled: true)
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Password',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                  validator : (input){
+                                    if(input.length<6){
+                                      return 'Your Password is week';
+                                    }
+                                  },
+                                  onSaved: (input) => _password = input,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      fillColor: Color(0xfff3f3f4),
+                                      filled: true)),
+                              SizedBox(height: 20),
+
+                            ],
+                          ),
+
+                        ),
+                        RaisedButton(
+                          padding: EdgeInsets.symmetric(vertical: 0),
+                          onPressed: signIn,
+                          child:  Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(5)),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Colors.grey.shade200,
+                                      offset: Offset(2, 4),
+                                      blurRadius: 5,
+                                      spreadRadius: 2)
+                                ],
+                                gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+                            child: Text(
+                              'Login',
+                              style: TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                          ) ,
+                        ),
+                      ],
+                    ),
+                  ),
+
+
+
+
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.centerRight,
@@ -271,8 +365,8 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 14, fontWeight: FontWeight.w500)),
                   ),
                   _divider(),
-                  _facebookButton(),
-                  SizedBox(height: height * .055),
+                  //_facebookButton(),
+                  //SizedBox(height: height * .055),
                   _createAccountLabel(),
                 ],
               ),
@@ -283,4 +377,19 @@ class _LoginPageState extends State<LoginPage> {
       ),
     ));
   }
+Future<void> signIn() async {
+    final formState = _formKey.currentState;
+    if(formState.validate()){
+      formState.save();
+      try{
+        AuthResult result = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+        FirebaseUser user = result.user;
+       Navigator.push(context, MaterialPageRoute(builder: (context) =>HomePage()));
+      }catch(e){
+        print(e.message);
+      }
+    }
+
+}
+
 }

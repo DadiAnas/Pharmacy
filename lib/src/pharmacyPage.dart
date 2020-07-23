@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:mypharmacy/src/Widget/autocomplete_textfield.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pharmaciemobile/src/Widget/autocomplete_textfield.dart';
 import 'Widget/bezierBotContainer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'jsonParser/pharmacies.dart' as pharmacies;

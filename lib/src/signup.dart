@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mypharmacy/src/Widget/bezierContainer.dart';
-import 'package:mypharmacy/src/loginPage.dart';
+import 'package:pharmaciemobile/src/Widget/bezierContainer.dart';
+import 'package:pharmaciemobile/src/loginPage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.title}) : super(key: key);
@@ -13,6 +15,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  String _email, _password,_passwordConfirm;
+  final GlobalKey<FormState> _formKey=GlobalKey<FormState>();
+  final TextEditingController _pass = TextEditingController();
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -24,8 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.arrow_back_ios,
-                  color: Color(0xffe46b10) /*Colors.black*/),
+              child: Icon(Icons.arrow_back_ios, color: Color(0xffe46b10)/*Colors.black*/),
             ),
             /*Text('Back',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))*/
@@ -167,23 +171,140 @@ class _SignUpPageState extends State<SignUpPage> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: height * .2),
-                    _title(),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    _emailPasswordWidget(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _submitButton(),
-                    SizedBox(height: height * .14),
-                    _loginAccountLabel(),
-                  ],
+                child: Form(
+                  key: _formKey,
+                  child:Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: height * .2),
+                      _title(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      //_emailPasswordWidget(),
+                      Column(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Email",
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                TextFormField(
+
+                                    validator : (input){
+
+                                      if(input.isEmpty){
+                                        return 'Please type an Email';
+                                      }
+                                    },
+                                    onSaved: (input) => _email = input,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        fillColor: Color(0xfff3f3f4),
+                                        filled: true))
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Password",
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                TextFormField(
+                                    controller: _pass,
+                             validator : (input){
+                                if(input.length<6){
+                                return 'Your Password is week';
+                                }
+                              },
+                              onSaved: (input) => _password = input,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        fillColor: Color(0xfff3f3f4),
+                                        filled: true))
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Confirm Password",
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                TextFormField(
+
+                                    onSaved: (input) => _passwordConfirm = input,
+                                    validator : (input){
+                                      if(input !=_pass.text){
+                                        return 'Password incompatible';
+                                      }
+                                    },
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        fillColor: Color(0xfff3f3f4),
+                                        filled: true))
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          RaisedButton(
+                            padding: EdgeInsets.symmetric(vertical: 0),
+                            onPressed: signUp,
+                            child:Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color: Colors.grey.shade200,
+                                        offset: Offset(2, 4),
+                                        blurRadius: 5,
+                                        spreadRadius: 2)
+                                  ],
+                                  gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+                              child: Text(
+                                'Register Now',
+                                style: TextStyle(fontSize: 20, color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      //SizedBox(height: height * .1),
+                      _loginAccountLabel(),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -192,5 +313,22 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  Future<void> signUp() async {
+    final formState = _formKey.currentState;
+    if(formState.validate()){
+      formState.save();
+      try{
+        AuthResult result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+        FirebaseUser user = result.user;
+        user.sendEmailVerification();
+        Navigator.of(context).pop();
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>LoginPage()));
+      }catch(e){
+        print(e.message);
+      }
+    }
+
   }
 }

@@ -35,6 +35,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
+
   Widget _divider() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -50,6 +52,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
 
   Widget _title() {
     return RichText(
@@ -75,7 +79,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _main() {
+
+  Widget _main(){
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Container(
@@ -92,7 +97,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          SizedBox(height: height * .1),
+          SizedBox(height: height*.1 ),
         ],
       ),
     );
@@ -104,44 +109,35 @@ class _HomePageState extends State<HomePage> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
         body: Container(
-      height: height,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-              top: -height * .29,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierBotContainer()),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: height * .06),
-                  _title(),
-                  _divider(),
-                  SizedBox(height: height * .12),
-                  _main(),
-                ],
+          height: height,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                  top: -height * .29,
+                  right: -MediaQuery.of(context).size.width * .4,
+                  child: BezierBotContainer()),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: height*.06 ),
+                      _title(),
+                      _divider(),
+                      SizedBox(height: height * .12),
+                      _main(),
+                    ],
+                  ),
+                ),
               ),
-            ),
+              Positioned(top: height* .4, left: width/6, child: PharmacyButton()),
+              Positioned(top: height* .6, left: width/6, child: DrugButton()),
+              Positioned(top: 40, left: 0, child: _backButton()),
+              Positioned(bottom: 30, right: 30, child: Icon(Icons.info,color:Color(0xffe46b10),size: width* .09,),),
+            ],
           ),
-          Positioned(
-              top: height * .4, left: width / 6, child: PharmacyButton()),
-          Positioned(top: height * .6, left: width / 6, child: DrugButton()),
-          Positioned(top: 40, left: 0, child: _backButton()),
-          Positioned(
-            bottom: 30,
-            right: 30,
-            child: Icon(
-              Icons.info,
-              color: Color(0xffe46b10),
-              size: width * .09,
-            ),
-          ),
-        ],
-      ),
-    ));
+        ));
   }
 }
